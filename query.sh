@@ -42,19 +42,19 @@ for query in ./sql/q{0,1,2,3,4}.sql;do
     #start monitor
     cd $qOutRoot && ./monitor.sh "$baseName-mon" && cd -
 
-    #sql="select count(trip_id) from trips where trip_id < 5;
-#`cat $query`
-#"
-    ##sql=`echo "$sql" | sed "s/from trips\|FROM trips/FROM $tbName/"`
-    ##echo "$sql"
-    #for i in {1..8};do
-        #resultFile="$qOutSub/$i.txt"
-        #resultFileS="$qOutSub/$i.txt.sort"
-        #escape=`echo "$sql" | $PG_HOME/bin/psql -h /tmp -f - -o $resultFile $dbName 2>/dev/null | awk '/Time: / {print $2}'`
-        #sort $resultFile -o $resultFileS
-        ##echo "$i,spend $escape ms"
-        #echo "$escape"
-    #done
+    sql="select count(trip_id) from trips where trip_id < 5;
+`cat $query`
+"
+    #sql=`echo "$sql" | sed "s/from trips\|FROM trips/FROM $tbName/"`
+    #echo "$sql"
+    for i in {1..8};do
+	resultFile="$qOutSub/$i.txt"
+	resultFileS="$qOutSub/$i.txt.sort"
+	escape=`echo "$sql" | $PG_HOME/bin/psql -h /tmp -f - -o $resultFile $dbName 2>/dev/null | awk '/Time: / {print $2}'`
+	sort $resultFile -o $resultFileS
+	#echo "$i,spend $escape ms"
+	echo "$escape"
+    done
 
     #stop monitor
     cd $qOutRoot && ./monitor.sh && cd -
