@@ -1,5 +1,5 @@
 #!/bin/bash
-dbName="test"
+dbName="postgres"
 tbName="trips"
 cpTimes=1
 doAppend=1
@@ -29,7 +29,8 @@ while [ $# -gt 0 ]; do
 	    ;;
     	*)
 	    echo "---args error----"
- 	    echo "usage:$0 -t[tb]/-d[db]/-n[cpTimes]/-r[reset]/-f[full]" 
+ 	    echo "usage:$0 -t[tb/$tbName]/-d[db/$dbName]/-n[cpTimes]/-r[reCreate not append]/-f[full csv]" 
+	    echo "---default is append data to $tbName table in db $dbName----"
 	    exit
 	    ;;
     esac
@@ -46,7 +47,7 @@ else
     msg="reCreate"
 fi
 echo "$sql" | head -n 3
-echo "	........"
+echo "........"
 echo "$sql" | tail -n 3
 echo "using data: $data_path"
 echo "---$msg tb $tbName in db $dbName for $cpTimes times---"

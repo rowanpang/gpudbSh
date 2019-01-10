@@ -7,11 +7,12 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
   [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+ROOTPATH=${DIR%/*}
 
-source ${DIR}/zdb.sh
+source ${ROOTPATH}/script/megawise_env.sh
 
-if [  -d "${PG_HOME}/logfile" ]; then
-rm -f ${PG_HOME}/logfile
+if [  -d "${PGDATA}/logfile" ]; then
+  rm -f ${PGDATA}/logfile
 fi
 
-$PG_HOME/bin/pg_ctl -D $PG_HOME/data -l $PG_HOME/logfile restart
+${ROOTPATH}/bin/pg_ctl -D ${PGDATA} -l ${PGDATA}/logfile restart
