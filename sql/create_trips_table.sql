@@ -51,4 +51,4 @@ CREATE  TABLE trips (
     dropoff_ntacode         VARCHAR(4),
     dropoff_ntaname         VARCHAR(56),
     dropoff_puma            VARCHAR(4)
-) SERVER zdb_server;
+);
