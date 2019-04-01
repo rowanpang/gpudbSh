@@ -1,24 +1,22 @@
 #!/bin/bash
 
-while getopts "d:l:h" arg
+MEGAWISE_CONFIG=""
+
+while getopts "c:h" arg
 do
         case $arg in
-             d) # postgres data path
-                PGDATA=$OPTARG
-                ;;
-             l) # postgres log file
-                PG_LOG=$OPTARG
+             c) # megawise configure file path
+                MEGAWISE_CONFIG=$OPTARG
                 ;;
              h) # help
                 echo "
 
 parameter:
 -h: help
--d: postgres data path
--l: postgres log file
+-c: megawise configure file path
 
 usage:
-./start_server.sh -d \${PGDATA} -l \${PG_LOG} [-h]
+./start_megawise.sh -c \${MEGAWISE_CONFIG} [-h]
                 "
                 exit 0
                 ;;
@@ -29,11 +27,6 @@ usage:
         esac
 done
 
-if [[ -z "${PGDATA}" ]];then
-  echo "Environment variable 'PGDATA' does not exist."
-  exit 1
-fi
-
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
   DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
@@ -42,14 +35,17 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 ROOTPATH=${DIR%/*}
+ROOT_LIB_PATH=${ROOTPATH}/lib
 
-
-if [[ ! -n ${PG_LOG} || ${PG_LOG} == "" ]];then
-  PG_LOG_PATH=${PGDATA}/logs
-  if [[ ! -d "${PG_LOG_PATH}" ]]; then
-    mkdir -p ${PG_LOG_PATH}
-  fi
-  PG_LOG="${PG_LOG_PATH}/logfile"
+if [ -d ${ROOT_LIB_PATH} ]; then
+  export LD_LIBRARY_PATH=${ROOT_LIB_PATH}:${LD_LIBRARY_PATH}
+else
+  export LD_LIBRARY_PATH=${ROOT_LIB_PATH}
 fi
 
-${ROOTPATH}/bin/pg_ctl -D ${PGDATA} -l ${PG_LOG} start
+if [[ ! -n ${MEGAWISE_CONFIG} || ${MEGAWISE_CONFIG} == "" ]];then
+  MEGAWISE_CONFIG=${ROOTPATH}/conf/megawise_config.yaml
+fi
+
+${ROOTPATH}/bin/megawise_server -c ${MEGAWISE_CONFIG} &
+

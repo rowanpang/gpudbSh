@@ -11,8 +11,8 @@ ROOTPATH=${DIR%/*}
 
 source ${ROOTPATH}/script/megawise_env.sh
 
-if [  -d "${PGDATA}/logfile" ]; then
-  rm -f ${PGDATA}/logfile
+if [  -d "${ROOTPATH}/logfile" ]; then
+rm -f ${ROOTPATH}/logfile
 fi
 
-${ROOTPATH}/bin/pg_ctl -D ${PGDATA} -l ${PGDATA}/logfile restart
+${ROOTPATH}/bin/pg_ctl -D ${PGDATA} -l ${ROOTPATH}/logfile restart

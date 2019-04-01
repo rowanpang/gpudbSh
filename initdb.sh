@@ -4,8 +4,9 @@ DB_NAME="postgres" # default postgres
 PORT="5432"  # default 5432
 DATAPATH=${PGDATA}
 FORCE=false
+FOOL_PROOFING=true
 
-while getopts "p:n:d:fh" arg
+while getopts "p:n:d:ifh" arg
 do
         case $arg in
              p) # port
@@ -16,6 +17,9 @@ do
                 ;;
              d) # data_path
                 DATAPATH=$OPTARG
+                ;;
+             i) # fool proof
+                FOOL_PROOFING=false
                 ;;
              f) # force delete database storage path
                 FORCE=true
@@ -28,10 +32,11 @@ parameter:
 -p: postgres port
 -n: database name
 -d: database storage path
+-i: fool proof
 -f: force delete database storage path
 
 usage:
-./initdb.sh -p \${PORT} -n \${DB_NAME} -d \${DATAPATH} [-f] [-h]
+./initdb.sh -p \${PORT} -n \${DB_NAME} -d \${DATAPATH} [-i] [-f] [-h]
                 "
                 exit 0
                 ;;
@@ -53,14 +58,19 @@ ROOTPATH=${DIR%/*}
 
 source ${ROOTPATH}/script/megawise_env.sh
 
-if [[ ! -n ${DATAPATH} ]];then
+if [[ ! -n ${DATAPATH} ]]; then
   DATAPATH=${ROOTPATH}/data
 fi
 
 
-if [[ ${FORCE} == false ]];then
+if [[ ${FORCE} == false ]]; then
   QUIT_COMMAND="Y"
-  if [[ -d "${DATAPATH}" ]];then
+  if [[ -d "${DATAPATH}" ]]; then
+    if [[ ${FOOL_PROOFING} == false ]]; then
+      echo "The \" ${DATAPATH} \" already exists!"
+      exit 0
+    fi
+
     until [ "$USER_INPUT" = "$QUIT_COMMAND" ]
     do
       echo "
@@ -83,20 +93,20 @@ if [[ ${FORCE} == false ]];then
     done
   fi
 else
-  if [[ -d "${DATAPATH}" ]];then
+  if [[ -d "${DATAPATH}" ]]; then
     rm -rf ${DATAPATH}
   fi
 fi
 
-mkdir ${DATAPATH}
+mkdir -p ${DATAPATH}
 ${ROOTPATH}/bin/initdb ${DATAPATH}
 export PGDATA=${DATAPATH}
 cat "${ROOTPATH}/script/append_config.sh"  >> ${PGDATA}/postgresql.conf
 echo "port = ${PORT}" >> ${PGDATA}/postgresql.conf
 . ${ROOTPATH}/script/gen_config.sh
 ${ROOTPATH}/script/start_server.sh
-if [[ ${DB_NAME} != "postgres" ]];then
+if [[ ${DB_NAME} != "postgres" ]]; then
   $ROOTPATH/bin/createdb -p ${PORT} ${DB_NAME}
 fi
-$ROOTPATH/bin/psql -p ${PORT} -f ${ROOTPATH}/sql/create_server.sql ${DB_NAME}
+# $ROOTPATH/bin/psql -p ${PORT} -f ${ROOTPATH}/sql/create_server.sql ${DB_NAME}
 ${ROOTPATH}/script/stop_server.sh

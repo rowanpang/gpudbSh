@@ -22,7 +22,7 @@ parameter:
 -n: database name
 
 usage:
-./initdb.sh -p \${PORT} -n \${DB_NAME} [-h]
+./connect.sh -p \${PORT} -n \${DB_NAME} [-h]
                 "
                 exit 0
                 ;;
@@ -42,4 +42,4 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 ROOTPATH=${DIR%/*}
 
-${ROOTPATH}/bin/psql -p ${PORT} -n ${DB_NAME}
+${ROOTPATH}/bin/psql -p ${PORT} -d ${DB_NAME}
