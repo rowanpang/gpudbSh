@@ -7,14 +7,14 @@ doAppend=1
 data_basedir=$HOME/NYC_TAXI
 data_path=$data_basedir/rowan
 
-while [ $# -gt 0 ]; do                                                                             
+while [ $# -gt 0 ]; do
     case "$1" in
         -t)
 	    tbName=$2
 	    shift
    	    ;;
 	-d)
-	    dbName=$2	
+	    dbName=$2
 	    shift
 	    ;;
 	-n)
@@ -29,7 +29,7 @@ while [ $# -gt 0 ]; do
 	    ;;
     	*)
 	    echo "---args error----"
- 	    echo "usage:$0 -t[tb/$tbName]/-d[db/$dbName]/-n[cpTimes]/-r[reCreate not append]/-f[full csv]" 
+	    echo "usage:$0 -t[tb/$tbName]/-d[db/$dbName]/-n[cpTimes]/-r[reCreate not append]/-f[full csv]"
 	    echo "---default is append data to $tbName table in db $dbName----"
 	    exit
 	    ;;
@@ -37,7 +37,7 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-	
+
 sqlCreateOrg=`cat ${MEGAWISE_HOME}/script/sql/create_trips_table.sql`
 if [ "$doAppend" -eq 1 ];then
     sql=`echo "$sqlCreateOrg" | sed '1d' | sed "1s/trips/IF NOT EXISTS $tbName/"`
@@ -57,13 +57,15 @@ echo "$sql" | $MEGAWISE_HOME/bin/psql -f - $dbName
 
 for i in `seq 1 $cpTimes`;do
     for filename in $data_path/*.csv; do
-	echo "`date +%Y%m%d-%H:%M:%S`,file:$filename"
+	echo "`date +%Y%m%d-%H:%M:%S`,copy start for $filename"
 	$MEGAWISE_HOME/bin/psql --dbname=$dbName --username=$USER<<EOF
 \timing on
 copy $tbName FROM '$filename' WITH CSV HEADER ;
 EOF
+	echo "`date +%Y%m%d-%H:%M:%S`,copy end for $filename"
+	echo
+	echo
     done
-
     echo
     echo
 done
