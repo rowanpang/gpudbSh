@@ -38,7 +38,7 @@ while [ $# -gt 0 ]; do
 done
 
 	
-sqlCreateOrg=`cat ${PG_HOME}/script/sql/create_trips_table.sql`
+sqlCreateOrg=`cat ${MEGAWISE_HOME}/script/sql/create_trips_table.sql`
 if [ "$doAppend" -eq 1 ];then
     sql=`echo "$sqlCreateOrg" | sed '1d' | sed "1s/trips/IF NOT EXISTS $tbName/"`
     msg="doAppend"
@@ -53,12 +53,12 @@ echo "using data: $data_path"
 echo "---$msg tb $tbName in db $dbName for $cpTimes times---"
 sleep 3
 
-echo "$sql" | $PG_HOME/bin/psql -f - $dbName
+echo "$sql" | $MEGAWISE_HOME/bin/psql -f - $dbName
 
 for i in `seq 1 $cpTimes`;do
     for filename in $data_path/*.csv; do
 	echo "`date +%Y%m%d-%H:%M:%S`,file:$filename"
-	$PG_HOME/bin/psql --dbname=$dbName --username=$USER<<EOF
+	$MEGAWISE_HOME/bin/psql --dbname=$dbName --username=$USER<<EOF
 \timing on
 copy $tbName FROM '$filename' WITH CSV HEADER ;
 EOF

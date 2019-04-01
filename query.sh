@@ -50,7 +50,7 @@ for query in ./sql/q{0,1,2,3,4}.sql;do
     for i in {1..8};do
 	resultFile="$qOutSub/$i.txt"
 	resultFileS="$qOutSub/$i.txt.sort"
-	escape=`echo "$sql" | $PG_HOME/bin/psql -h /tmp -f - -o $resultFile $dbName 2>/dev/null | awk '/Time: / {print $2}'`
+	escape=`echo "$sql" | $MEGAWISE_HOME/bin/psql -h /tmp -f - -o $resultFile $dbName 2>/dev/null | awk '/Time: / {print $2}'`
 	sort $resultFile -o $resultFileS
 	#echo "$i,spend $escape ms"
 	echo "$escape"

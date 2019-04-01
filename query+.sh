@@ -2,12 +2,12 @@
 
 source zdb.sh 
 
-queryWK="$PG_HOME/script/queryRoot"
+queryWK="$MEGAWISE_HOME/script/queryRoot"
 if ! [  -d "${queryWK}" ]; then
 	mkdir -p ${queryWK}
 fi
 
-for query in `ls $PG_HOME/script/sql/q{1,2,3,4}+.sql`;do
+for query in `ls $MEGAWISE_HOME/script/sql/q{1,2,3,4}+.sql`;do
 	bSuffix=`basename $query`
 	baseName=${bSuffix%%.*}
 	echo -n "`date +%Y%m%d-%H:%M:%S`,do query for:$baseName,"
@@ -21,7 +21,7 @@ for query in `ls $PG_HOME/script/sql/q{1,2,3,4}+.sql`;do
 	
 	resultFile="$outDir/$i.txt"
 	resultFileS="$outDir/$i.txt.sort"
-	escape=`$PG_HOME/bin/psql -h /tmp -f ${query} -o $resultFile test 2>/dev/null | awk '/Time: / {print $2}'`
+	escape=`$MEGAWISE_HOME/bin/psql -h /tmp -f ${query} -o $resultFile test 2>/dev/null | awk '/Time: / {print $2}'`
 	sort $resultFile -o $resultFileS
 	echo "$escape"
 	echo

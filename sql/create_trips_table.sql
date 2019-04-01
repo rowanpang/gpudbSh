@@ -1,5 +1,5 @@
-DROP FOREIGN TABLE IF EXISTS trips;
-CREATE FOREIGN TABLE trips (
+DROP  TABLE IF EXISTS trips;
+CREATE  TABLE trips (
     trip_id                 INTEGER,
     vendor_id               VARCHAR(10),
     pickup_datetime         TIMESTAMP,
