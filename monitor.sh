@@ -64,6 +64,11 @@ function optParser(){
 }
 
 function depCheck(){
+    if [ $UID -ne 0 ];then
+	[ $verbose -ge 1 ] && echo "not run as root, return"
+	return
+    fi
+
     [ $verbose -ge 1 ] && echo 'in func depCheck'
     cmdChkInstall dstat
     cmdChkInstall pidstat sysstat
@@ -215,7 +220,7 @@ function main(){
     doMon
 }
 
-verbose="1"
+verbose="0"
 pidfile="pid-bg.log"
 interval=1
 count=""
