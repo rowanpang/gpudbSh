@@ -202,7 +202,7 @@ function gatherInfo(){
     echo >> $dirName/${pfx}osInfo.log
     uname -a >> $dirName/${pfx}osInfo.log
 
-    lshw > $dirName/${pfx}lshw.log
+    lshw > $dirName/${pfx}lshw.log 2>/dev/null	#for normal user warning
     lscpu > $dirName/${pfx}lscpu.log
     ip a > $dirName/${pfx}ipA.log
 
