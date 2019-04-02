@@ -203,7 +203,7 @@ function gatherInfo(){
 
     nvidia-smi --list-gpus > $dirName/${pfx}gpus.log
     nvidia-smi -q -d CLOCK > $dirName/${pfx}gpus.clock.log
-    nvidia-smi -q -d SUPPORTED_CLOCK > $dirName/${pfx}gpus.clock.supported.log
+    nvidia-smi -q -d SUPPORTED_CLOCKS > $dirName/${pfx}gpus.clock.supported.log
 }
 
 function main(){
