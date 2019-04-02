@@ -190,10 +190,12 @@ function gatherInfo(){
     uname -a >> $dirName/${pfx}osInfo.log
 
     lshw > $dirName/${pfx}lshw.log
-
     lscpu > $dirName/${pfx}lscpu.log
-
     ip a > $dirName/${pfx}ipA.log
+
+    nvidia-smi --list-gpus > $dirName/${pfx}gpus.log
+    nvidia-smi -q -d CLOCK > $dirName/${pfx}gpus.clock.log
+    nvidia-smi -q -d SUPPORTED_CLOCK > $dirName/${pfx}gpus.clock.supported.log
 }
 
 function main(){
