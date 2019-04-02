@@ -49,3 +49,6 @@ fi
 
 ${ROOTPATH}/bin/megawise_server -c ${MEGAWISE_CONFIG} &
 
+echo "waiting...."
+sleep 30
+echo "finished"
