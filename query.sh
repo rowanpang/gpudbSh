@@ -45,7 +45,7 @@ function doQuery() {
 	query=./sql/q$idx.sql
 	bSuffix=`basename $query`
 	baseName=${bSuffix%%.*}
-	echo "`date +%Y%m%d-%H:%M:%S`,do query:$query"
+	echo "`date +%Y%m%d-%H:%M:%S`,do query: $query"
 	qOutSub="${qOutRoot}/${baseName}"
 	if [ -d $qOutSub ];then
 	    rm -rf $qOutSub
