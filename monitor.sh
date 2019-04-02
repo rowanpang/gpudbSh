@@ -166,15 +166,15 @@ function checkKill() {
             if [ X$cCmd != X ];then
                 match=`echo $cCmd | grep -c $oCmd`
                 if [ $match -ge 1 ] ;then
-                ¦   killStat="match"
-                ¦   kill $pid
-                ¦   [ $? -eq 0 ] && killStat="$killStat-ok" || killStat="$killStat-ng"
+                    killStat="match"
+                    kill $pid
+                    [ $? -eq 0 ] && killStat="$killStat-ok" || killStat="$killStat-ng"
                 else
-                ¦   killStat="notMath cCmd $cCmd,skip"
+                    killStat="notMath cCmd $cCmd,skip"
                 fi
             fi
 
-            [ $verbose -ge 1 ] && printf "\tkill pid-oCmd: %20s---%s\n" "$pid-$oCmd" "$killStat"
+            [ $verbose -ge 1 ] && printf "\tkill pid-oCmd: %-20s---%s\n" "$pid-$oCmd" "$killStat"
         done
 
         rm -rf $pidfile
