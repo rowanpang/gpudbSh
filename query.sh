@@ -81,17 +81,24 @@ function doQuery() {
 }
 
 qOutRoot="./qOut"
-if ! [  -d "${qOutRoot}" ]; then
-    mkdir -p ${qOutRoot}
-fi
-
 dbName="postgres"
 tbName="trips"
 start="0"
 end="4"
 
+function doInit() {
+    tsufix=`date +%Y%m%d-%H%M%S`
+    if [ -d "${qOutRoot}" ]; then
+	mv $qOutRoot $qOutRoot.$tsufix
+	echo "backup to $qOutRoot.$tsufix"
+    fi
+
+    mkdir -p ${qOutRoot}
+}
+
 function main() {
     optParser $@
+    doInit
     doQuery $start $end
 }
 
