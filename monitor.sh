@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function usage () {
-    echo "Usage :  $0 [options] [optIssues]
+    echo "Usage :  $0 [options] [identify]
         Options:
         -h		    Display this message
         -d  dirname	    log dirName
