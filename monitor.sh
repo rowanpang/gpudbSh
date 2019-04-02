@@ -155,28 +155,30 @@ function doInit() {
 
 function checkKill() {
     if [ -s $pidfile ];then
-	pidCmds=`cat $pidfile`
-	[ $verbose -ge 1 ] && echo "----try kill: $pidCmds-----"
+        pidCmds=`cat $pidfile`
+        [ $verbose -ge 1 ] && echo "----try kill: $pidCmds-----"
 
-	for pidCmd in $pidCmds;do
-	    pid=${pidCmd#*,}
-	    oCmd=${pidCmd%,*}
-	    [ $verbose -ge 1 ] && echo -ne "\t kill pid-oCmd: $pid-$oCmd---"
-	    cCmd=`ps -o pid,command $pid 2>/dev/null | awk '{if (NR>1) print $2}'`
+        for pidCmd in $pidCmds;do
+            pid=${pidCmd#*,}
+            oCmd=${pidCmd%,*}
+            cCmd=`ps -o pid,command $pid 2>/dev/null | awk '{if (NR>1) print $2}'`
 
-	    if [ X$cCmd != X ];then
-		match=`echo $cCmd | grep -c $oCmd`
-		if [ $match -ge 1 ] ;then
-		    kill $pid
-		    [ $verbose -ge 1 ] && echo "ok"
-		else
-		    [ $verbose -ge 1 ] && echo "not math cCmd $cCmd,skip"
-		fi
-	    fi
-	done
+            if [ X$cCmd != X ];then
+                match=`echo $cCmd | grep -c $oCmd`
+                if [ $match -ge 1 ] ;then
+                ¦   killStat="match"
+                ¦   kill $pid
+                ¦   [ $? -eq 0 ] && killStat="$killStat-ok" || killStat="$killStat-ng"
+                else
+                ¦   killStat="notMath cCmd $cCmd,skip"
+                fi
+            fi
 
-	rm -rf $pidfile
-	exit
+            [ $verbose -ge 1 ] && printf "\tkill pid-oCmd: %20s---%s\n" "$pid-$oCmd" "$killStat"
+        done
+
+        rm -rf $pidfile
+        exit
     fi
 }
 
