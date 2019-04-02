@@ -155,29 +155,35 @@ function doInit() {
 
 function checkKill() {
     if [ -s $pidfile ];then
-        pidCmds=`cat $pidfile`
-        [ $verbose -ge 1 ] && echo "----try kill: $pidCmds-----"
+	pidCmds=`cat $pidfile`
+	[ $verbose -ge 1 ] && echo "----try kill: $pidCmds-----"
 
-        for pidCmd in $pidCmds;do
-            pid=${pidCmd#*,}
-            oCmd=${pidCmd%,*}
-            cCmd=`ps -o pid,command $pid 2>/dev/null | awk '{if (NR>1) print $2}'`
+	for pidCmd in $pidCmds;do
+	    pid=${pidCmd#*,}
+	    oCmd=${pidCmd%,*}
+	    cCmd=`ps -o pid,command $pid 2>/dev/null | awk '{if (NR>1) print $2}'`
 
             if [ X$cCmd != X ];then
                 match=`echo $cCmd | grep -c $oCmd`
                 if [ $match -ge 1 ] ;then
                     killStat="match"
                     kill $pid
-                    [ $? -eq 0 ] && killStat="$killStat-ok" || killStat="$killStat-ng"
+		    if [ $? -eq 0 ];then
+			killStat="$killStat-ok"
+		    else
+			killStat="$killStat-ng"
+			notRM="true"
+		    fi
                 else
-                    killStat="notMath cCmd $cCmd,skip"
+		    killStat="notMath cCmd $cCmd,skip"
+		    notRM="true"
                 fi
             fi
 
             [ $verbose -ge 1 ] && printf "\tkill pid-oCmd: %-20s---%s\n" "$pid-$oCmd" "$killStat"
         done
 
-        rm -rf $pidfile
+        [ X$notRM == X ] && rm -rf $pidfile
         exit
     fi
 }
