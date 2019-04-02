@@ -88,6 +88,7 @@ end="4"
 
 function doInit() {
     tsufix=`date +%Y%m%d-%H%M%S`
+    qOutRoot="$qOutRoot.q$start..$end.$tsufix"
     if [ -d "${qOutRoot}" ]; then
 	mv $qOutRoot $qOutRoot.$tsufix
 	echo "backup to $qOutRoot.$tsufix"
