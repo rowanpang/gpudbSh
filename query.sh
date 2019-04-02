@@ -40,7 +40,8 @@ for query in ./sql/q{0,1,2,3,4}.sql;do
     cp -f monitor.sh $qOutRoot
 
     #start monitor
-    cd $qOutRoot && ./monitor.sh "$baseName-mon" && cd -
+    cd $qOutRoot && ./monitor.sh "$baseName-mon"
+    cd -
 
     sql="select count(trip_id) from trips where trip_id < 5;
 `cat $query`
@@ -57,7 +58,8 @@ for query in ./sql/q{0,1,2,3,4}.sql;do
     done
 
     #stop monitor
-    cd $qOutRoot && ./monitor.sh && cd -
+    cd $qOutRoot && ./monitor.sh
+    cd -
 
     echo
 done

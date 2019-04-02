@@ -218,6 +218,7 @@ function main(){
     depCheck
     gatherInfo
     doMon
+    return 0
 }
 
 verbose="0"
