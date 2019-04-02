@@ -7,6 +7,7 @@ function usage() {
 	-d: dbName  [$dbName]
 	-q: spcify qX	[all]
 	"
+    exit 0
 }
 
 function optParser() {
