@@ -2,6 +2,7 @@
 
 function usage() {
     echo "usage: $0 [option]
+	-m: force mon
 	-t: tbName  [$tbName]
 	-d: dbName  [$dbName]
 	-q: spcify qX	[all]
@@ -9,7 +10,7 @@ function usage() {
 }
 
 function optParser() {
-    while getopts ":hd:t:q:" opt;do
+    while getopts ":hd:t:q:m" opt;do
 	case $opt in
 	    h)
 		usage
@@ -24,7 +25,11 @@ function optParser() {
 		idx="$OPTARG"
 		start=$idx
 		end=$idx
+		defaultMon="false"
 	        ;;
+	    m)
+		forceMon="true"
+		;;
 	    \?)
 	        echo "--Invalid args -$OPTARG"
 	        usage
@@ -55,8 +60,10 @@ function doQuery() {
 	cp -f monitor.sh $qOutRoot
 
 	#start monitor
-	cd $qOutRoot && ./monitor.sh "$baseName-mon"
-	cd - >/dev/null 2>&1
+	if [ $forceMon == "true" -o  $defaultMon == "true" ];then
+	    cd $qOutRoot && ./monitor.sh "$baseName-mon"
+	    cd - >/dev/null 2>&1
+	fi
 
 	sql="select count(trip_id) from trips where trip_id < 5;
 	    `cat $query`
@@ -73,8 +80,10 @@ function doQuery() {
 	done
 
 	#stop monitor
-	cd $qOutRoot && ./monitor.sh
-	cd - >/dev/null 2>&1
+	if [ $forceMon == "true" -o $defaultMon == "true" ];then
+	    cd $qOutRoot && ./monitor.sh
+	    cd - >/dev/null 2>&1
+	fi
 
 	echo
     done
@@ -85,6 +94,9 @@ dbName="postgres"
 tbName="trips"
 start="0"
 end="4"
+
+defaultMon="true"
+forceMon="false"
 
 function doInit() {
     tsufix=`date +%Y%m%d-%H%M%S`
