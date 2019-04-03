@@ -78,6 +78,7 @@ function doQuery() {
 	    sort $resultFile -o $resultFileS
 	    #echo "$i,spend $escape ms"
 	    echo "$escape"
+	    echo "$escape" >> $qOutSub/time.log
 	done
 
 	#stop monitor
