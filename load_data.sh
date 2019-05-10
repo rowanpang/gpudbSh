@@ -15,6 +15,7 @@ function usage()
 	    -d:db/$dbName
 	    -n:cpTimes
 	    -r:reCreate not append
+	    -m:multiload
 	    -f:full csv"
     echo "---default is:
 	append data to $tbName table in db $dbName----"
@@ -40,6 +41,9 @@ while [ $# -gt 0 ]; do
 	    ;;
 	-f)
 	    data_path=$data_basedir/data
+	    ;;
+	-r)
+	    multiload="true"
 	    ;;
     	*)
 	    usage
@@ -91,17 +95,15 @@ function bgload() {
 	    let j+=1
 	    sqlCopy $filename &
 	    pids="$pids $!"
-	    echo
-	    echo
 	    let mod=j%4
 	    if [ $mod -eq 0];then
-		wait -n $pids
+		echo "echo one job finished"
+		wait $pids
 	    fi
 	done
-	wait
 
-	echo
-	echo
+	echo "echo all jobs finished"
+	wait
     done
 }
 
@@ -120,7 +122,11 @@ function fgload() {
 
 function main() {
     tableOps
-    fgload
+    if [ X$multiload != X ];then
+	bgload
+    else
+	fgload
+    fi
 }
 
 main
