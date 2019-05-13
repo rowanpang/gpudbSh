@@ -24,6 +24,9 @@
 	    megawise_ 10101 inspur    5w      REG              253,0        0    5546133 /tmp/zdb_inspur/zdb_server.ERROR.log.20190509-160715.log
 	    megawise_ 10101 inspur    6w      REG              253,0        0    5546135 /tmp/zdb_inspur/zdb_server.CRITICAL.log.20190509-160715.log
 
+    b,config
+	conf/megawise_config.yaml
+
 3,postgres
     a,logfiles
 	[inspur@node2 script]$ lsof -p 10140
@@ -31,3 +34,6 @@
 	    postgres 10140 inspur    3w   REG               8,17         0  540234739 /home/pwz/sdb/megawise/zdb/v2.6.2/data/megawise_log/zdb_inspur/zdb_inspur.WARNING.log.20190509-160845.log
 	    postgres 10140 inspur    4w   REG               8,17         0  540234740 /home/pwz/sdb/megawise/zdb/v2.6.2/data/megawise_log/zdb_inspur/zdb_inspur.ERROR.log.20190509-160845.log
 	    postgres 10140 inspur    5w   REG               8,17         0  540234741 /home/pwz/sdb/megawise/zdb/v2.6.2/data/megawise_log/zdb_inspur/zdb_inspur.CRITICAL.log.20190509-160845.log
+
+    b,config
+	./data/postgresql.conf
