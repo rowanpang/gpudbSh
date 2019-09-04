@@ -91,7 +91,7 @@ function bgload() {
     for((i=0;i<$cpTimes;i++));do
 	j=0
 	pids=""
-	for filename in $data_path/*.csv; do
+	for filename in $data_path/50m_{1..23}.csv; do
 	    let j+=1
 	    sqlCopy $filename &
 	    pids="$pids $!"
@@ -109,7 +109,7 @@ function bgload() {
 
 function fgload() {
     for((i=0;i<$cpTimes;i++));do
-	for filename in $data_path/*.csv; do
+	for filename in $data_path/50m_{1..23}.csv; do
 	    sqlCopy $filename
 	    echo
 	    echo
