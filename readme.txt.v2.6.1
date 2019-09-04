@@ -1,0 +1,11 @@
+1,conf/megawise_config.xxx  preload_data 改为true
+2,修改系统ulimit
+	a,case: megawise_server 加载一会异常退出,coredump,journal 
+		Apr 01 20:10:39 node2 abrt-hook-ccpp[117779]: Process 102783 (megawise_server) of user 1000 killed by SIGABRT - dumping core
+		Apr 01 20:12:28 node2 abrt-hook-ccpp[117779]: Write error: No space left on device
+		Apr 01 20:12:31 node2 abrt-hook-ccpp[117779]: Error writing '/var/spool/abrt/ccpp-2019-04-01-20:10:39-102783.new/coredump'
+	b, 主要设置如下,如下是可以工作的value,再小没有测试.
+		* soft nofile 262144
+		* hard nofile 262144
+		* soft nproc 10240
+		* hard nproc 10240
